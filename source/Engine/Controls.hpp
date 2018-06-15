@@ -13,15 +13,17 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #endif
-#define _USE_MATH_DEFINES
 #include <string>
 #include <vector>
 #include <math.h>
 #include "Group.hpp"
+#include </usr/local/Cellar/devil/1.8.0_1/include/IL/il.h>
+#define _USE_MATH_DEFINES
 #define LINE 1
 #define FILL 2
 #define BACK 3
 #define FRONT 4
+#define ROUTES 5
 
 typedef struct controls {
     float rad = 5.0;
@@ -31,6 +33,7 @@ typedef struct controls {
     int frame=0;
     int time;
     int timebase=0;
+    int routes = 0;
     Group *scene;
 }Controls;
 

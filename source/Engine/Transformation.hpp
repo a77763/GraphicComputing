@@ -25,7 +25,7 @@ public:
     
     Transformation();
     Transformation(float,float,float,float);
-    virtual void transform()=0;
+    virtual void transform(int)=0;
     ~Transformation();
 };
 

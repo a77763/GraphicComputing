@@ -18,7 +18,7 @@ Scale::Scale(float x_, float y_, float z_, float angle_){
     Transformation::z = z_;
     Transformation::angle = angle_;
 }
-void Scale::transform(){
+void Scale::transform(int routes){
     glScalef(Scale::x, Scale::y, Scale::z);
 }
 Scale::~Scale(){

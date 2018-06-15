@@ -15,7 +15,7 @@ public:
     int time;
     Rotate();
     Rotate(float,float,float,float,int);
-    void transform();
+    void transform(int routes);
     ~Rotate();
 };
 #endif /* Scale_hpp */

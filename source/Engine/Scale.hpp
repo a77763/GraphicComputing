@@ -14,7 +14,7 @@ class Scale : public Transformation{
 public:
     Scale();
     Scale(float,float,float,float);
-    void transform();
+    void transform(int routes);
     ~Scale();
 };
 #endif /* Scale_hpp */

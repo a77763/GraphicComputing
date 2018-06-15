@@ -7,25 +7,22 @@
 
 
 #include "Group.hpp"
-Group::Group(){
-    map<string, Primitive*> * map = new ::map<string, Primitive*>();
-    Group::load_models = map ;
-    
-};
-Group::Group(map<string, Primitive*>* map_models){
-    Group::load_models = map_models;
-};
-Group::Group(vector<string> tft_names, vector<Transformation*>tft , vector<Group*> cg, vector<Primitive*> p, map<string, Primitive*>* map_models){
-    Group::tft = tft;
-    Group::childGroups = cg;
-    Group::models = p;
-    Group::load_models = map_models;
-};
-void Group :: drawGroup(){
+map<string, tuple<GLuint,int>> Group:: load_models;
+map<string, GLuint> Group:: load_textures;
+map<string, GLuint> Group:: load_file_textures;
+map<string, GLuint> Group:: load_normals;
+vector<Light> Group:: lights;
+Group::Group(){};
+
+void Group :: drawGroup(int routes){
     glPushMatrix();
-    for (auto t : tft) t->transform();
-    for (auto model : models) model->drawModel();
-    for (auto child : childGroups) child->drawGroup();
+    for (auto x : lights) x.lightUp();
+    for (auto t : tft) t->transform(routes);
+    for (auto model : models){
+        GLuint text = load_file_textures[model->ntexture];
+        model->drawModel(text);
+    }
+    for (auto child : childGroups) child->drawGroup(routes);
     glPopMatrix();
 };
 int Group :: addTransformation(string name, Transformation* t){
@@ -45,3 +42,7 @@ int Group :: addGroup(Group* g){
     this->childGroups.push_back(g);
     return 1;
 }
+
+
+
+

@@ -1,6 +1,8 @@
 #include "Group.hpp"
 #include "Controls.hpp"
 #include "XMLParser.hpp"
+
+
 Controls ctrl;
 
 
@@ -122,7 +124,6 @@ void renderScene(void) {
     // clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    
-    fps();
     // set camera
     glLoadIdentity();
     gluLookAt(ctrl.rad*sin(ctrl.theta)*sin(ctrl.phi),
@@ -130,13 +131,10 @@ void renderScene(void) {
               ctrl.rad*sin(ctrl.theta)*cos(ctrl.phi),
               ctrl.x, ctrl.y, ctrl.z,
               0.0f, 1.0f, 0.0f);
-    glPushMatrix();
-    ctrl.scene->drawGroup();
-    glColor3f(0, 0, 0);
-    //drawAxis();
-    glPopMatrix();
+    glColor3f(1, 0, 0);
+    ctrl.scene->drawGroup(ctrl.routes);
+    fps();
     glutSwapBuffers();
-    //cout << ctrl.x <<" "<< ctrl.y <<" "<< ctrl.z << endl;
 }
 void processMenuEvents(int option) {
     
@@ -153,6 +151,8 @@ void processMenuEvents(int option) {
         case FRONT:
             glCullFace(GL_BACK);
             break;
+        case ROUTES:
+            ctrl.routes = ctrl.routes ? 0 : 1;
     }
     
     glutPostRedisplay();
@@ -171,6 +171,7 @@ void createGLUTMenus() {
     glutAddMenuEntry("FILL",FILL);
     glutAddMenuEntry("BACK",BACK);
     glutAddMenuEntry("FRONT",FRONT);
+    glutAddMenuEntry("VIEW ROUTES",ROUTES);
     // attach the menu to the right button
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -195,23 +196,24 @@ int main(int argc, char **argv) {
 #ifndef __APPLE__
     glewInit();
 #endif
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    ilInit();
+    ilEnable(IL_ORIGIN_SET);
+    ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_RESCALE_NORMAL);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
     int error = loadXML(argv[1], &ctrl);
     if (!error) {
         perror("Invalid XML file");
         return 1;
     }
-// OpenGL settings 
-	glEnableClientState(GL_VERTEX_ARRAY);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    glutMainLoop();
     
-	glClearColor(255.0f,255.0f,255.0f,0.0f);
-    //glClearColor(0.0f,0.0f,0.0f,0.0f);
-
-// enter GLUT's main loop
-	glutMainLoop();
-	
-	return 1;
+    return 1;
 }
 

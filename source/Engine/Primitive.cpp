@@ -14,36 +14,53 @@ Primitive::Primitive(){
 Primitive::Primitive(GLuint id_, int size_){
     Primitive::id = id_;
     Primitive::size = size_;
-    Primitive::idi = 0;
+    Primitive::normal = -1;
+    Primitive::nsize = 0;
+    Primitive::texture = -1;
 }
 
-Primitive::Primitive(GLuint id_, GLuint idi_, int size_){
-    Primitive::id = id_;
-    Primitive::idi = idi_;
-    Primitive::size = size_;
-}
 Primitive::~Primitive(){
     Primitive::id = 0;
-    Primitive::idi = 0;
     Primitive::size = 0;
 }
 
-GLuint Primitive:: getId(){
-    return id;
+
+Primitive::Primitive(GLuint id_, int size_, GLuint normal_, int nsize_, GLuint textures_, float* ambi_, float* emis_, float* spec_, float * diff_,string text, bool type_){
+    id = id_;
+    size = size_;
+    normal = normal_;
+    nsize = nsize_;
+    texture = textures_;
+    type = type_;
+    if(type){
+        Primitive::ntexture = text;
+    }
+    for (int i = 0;i<4; i++) {
+        ambi[i] = ambi_[i];
+        diff[i] = diff_[i];
+        spec[i] = spec_[i];
+        emis[i] = emis_[i];
+    }
 }
 
-int Primitive:: getSize(){
-    return size;
-}
-
-void Primitive::drawModel(){
+void Primitive::drawModel(GLuint text){
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambi);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+    glMaterialfv(GL_FRONT, GL_EMISSION, emis);
     glBindBuffer(GL_ARRAY_BUFFER,Primitive::id);
     glVertexPointer(3,GL_FLOAT,0,0);
-    if (idi != 0) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idi);
-        glDrawElements(GL_TRIANGLES, Primitive::size ,GL_UNSIGNED_INT, NULL);
+    glBindBuffer(GL_ARRAY_BUFFER, Primitive::normal);
+    glNormalPointer(GL_FLOAT, 0, 0);
+
+    
+    if (type) {
+        glBindTexture(GL_TEXTURE_2D, text);
+        glBindBuffer(GL_ARRAY_BUFFER, Primitive::texture);
+        glTexCoordPointer(2, GL_FLOAT, 0, 0);
     }
-    else{
-        glDrawArrays(GL_TRIANGLES, 0, Primitive::size);
-    }
+
+    glDrawArrays(GL_TRIANGLES, 0, Primitive::size);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

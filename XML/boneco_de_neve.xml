@@ -1,5 +1,6 @@
 <scene>
     <group>
+        <rotate time="10" axisX="1">
         <model file="sphere.3d"/>
         <group>
             <translate Y="1" />

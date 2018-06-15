@@ -9,11 +9,13 @@
 #define Group_hpp
 #include <map>
 #include <string>
+#include <tuple>
 #include <algorithm>
 #include "Scale.hpp"
 #include "Translate.hpp"
 #include "Rotate.hpp"
 #include "Primitive.hpp"
+#include "Light.hpp"
 using namespace std;
 class Group{
 public:
@@ -21,14 +23,18 @@ public:
     vector<Transformation*> tft;
     vector<Group*> childGroups;
     vector<Primitive*> models;
-    map<string, Primitive*>* load_models;
+    static map<string, tuple<GLuint,int>> load_models;
+    static map<string, GLuint> load_textures;
+    static map<string, GLuint> load_normals;
+    static map<string, GLuint> load_file_textures;
+    static vector<Light> lights;
+
     
     Group();
-    Group(map<string, Primitive*>*);
-    Group(vector<string>,vector<Transformation*>, vector<Group*>, vector<Primitive*>, map<string, Primitive*>*);
-    void drawGroup();
+    void drawGroup(int );
     int addTransformation(string name, Transformation* t);
     int addPrimitive(Primitive* p);
+    int addTexture(GLuint texture);
     int addGroup(Group* g);
 };
 #endif /* Group_hpp */

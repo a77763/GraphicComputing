@@ -19,7 +19,7 @@ Rotate::Rotate(float x_, float y_, float z_, float angle_, int time){
     Transformation::angle = angle_;
     Rotate::time = time;
 }
-void Rotate::transform(){
+void Rotate::transform(int routes){
     if (Rotate::time) {
         glRotatef(glutGet(GLUT_ELAPSED_TIME)*Rotate::angle, Rotate::x, Rotate::y, Rotate::z);
     }else{
